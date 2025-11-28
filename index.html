@@ -49,7 +49,6 @@
       overflow: hidden;
     }
 
-    /* Fake monitor chrome */
     .console-frame::before,
     .console-frame::after {
       content: "";
@@ -154,11 +153,59 @@
         0 0 18px rgba(40, 255, 183, 0.4);
     }
 
+    /* Progress bar */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px 10px;
+      border-bottom: 1px solid rgba(40, 255, 183, 0.25);
+      background: radial-gradient(circle at 0 0, rgba(40, 255, 183, 0.18), transparent 55%),
+                  rgba(2, 8, 20, 0.9);
+      font-size: 0.8rem;
+    }
+
+    .progress-label {
+      font-family: var(--font-mono);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(3, 16, 36, 0.95);
+      border: 1px solid rgba(40, 255, 183, 0.25);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      position: absolute;
+      inset: 0;
+      width: 33.3%;
+      background: linear-gradient(90deg, rgba(40, 255, 183, 0.1), rgba(40, 255, 183, 0.9));
+      box-shadow: 0 0 12px rgba(40, 255, 183, 0.7);
+      transition: width 200ms ease-out;
+    }
+
+    .progress-text {
+      font-family: var(--font-mono);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
     .main-area {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 220px;
       gap: 0;
-      min-height: 340px;
+      min-height: 320px;
     }
 
     @media (max-width: 800px) {
@@ -488,6 +535,90 @@
       color: var(--accent);
       box-shadow: 0 0 10px rgba(40, 255, 183, 0.4);
     }
+
+    /* Element table */
+    .element-table-wrapper {
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+
+    .element-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(40, 255, 183, 0.25);
+      background: rgba(2, 10, 25, 0.9);
+    }
+
+    .element-table thead {
+      background: rgba(4, 18, 36, 0.95);
+    }
+
+    .element-table th,
+    .element-table td {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(40, 255, 183, 0.12);
+    }
+
+    .element-table th {
+      font-family: var(--font-mono);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .element-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .code-cell {
+      font-family: var(--font-mono);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .element-input {
+      width: 100%;
+    }
+
+    /* Win screen extra style */
+    .win-main {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .win-title {
+      font-size: 1.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-family: var(--font-mono);
+    }
+
+    .win-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .win-badge {
+      border-radius: 999px;
+      border: 1px solid rgba(40, 255, 183, 0.5);
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      background: rgba(3, 18, 28, 0.95);
+    }
   </style>
 </head>
 <body>
@@ -509,43 +640,89 @@
         </div>
       </header>
 
+      <!-- Progress bar row -->
+      <div class="progress-row">
+        <div class="progress-label">MISSION PROGRESS</div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">1 / 3</div>
+      </div>
+
       <div class="main-area">
         <!-- MAIN SCREENS -->
         <div class="screen-area">
           <!-- Screen 1 -->
           <section class="screen active" data-screen="1">
             <div class="screen-label">SCREEN 01 • ELEMENT IDENTIFICATION</div>
-            <h2>Identify Element from Planet X Sample</h2>
+            <h2>Identify Elements from Planet X Samples</h2>
             <p class="screen-desc">
               Each ore core from Planet X is tagged with an internal code (A, B, C, D, E, J, G, Y, Z, L, M).
-              Decode the sample and specify the correct element name or chemical symbol.
+              For every sample, type the correct element symbol or full name.
+              Example format: <strong>H / Hydrogen</strong>.
             </p>
 
-            <div class="field-row">
-              <label for="sampleSelect">Sample code</label>
-              <select id="sampleSelect">
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
-                <option value="E">E</option>
-                <option value="J">J</option>
-                <option value="G">G</option>
-                <option value="Y">Y</option>
-                <option value="Z">Z</option>
-                <option value="L">L</option>
-                <option value="M">M</option>
-              </select>
+            <div class="element-table-wrapper">
+              <table class="element-table">
+                <thead>
+                  <tr>
+                    <th>Sample</th>
+                    <th>Element (symbol or name)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="code-cell">A</td>
+                    <td><input type="text" class="element-input" data-code="A" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">B</td>
+                    <td><input type="text" class="element-input" data-code="B" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">C</td>
+                    <td><input type="text" class="element-input" data-code="C" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">D</td>
+                    <td><input type="text" class="element-input" data-code="D" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">E</td>
+                    <td><input type="text" class="element-input" data-code="E" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">J</td>
+                    <td><input type="text" class="element-input" data-code="J" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">G</td>
+                    <td><input type="text" class="element-input" data-code="G" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">Y</td>
+                    <td><input type="text" class="element-input" data-code="Y" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">Z</td>
+                    <td><input type="text" class="element-input" data-code="Z" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">L</td>
+                    <td><input type="text" class="element-input" data-code="L" placeholder="H / Hydrogen"></td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">M</td>
+                    <td><input type="text" class="element-input" data-code="M" placeholder="H / Hydrogen"></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
-            <div class="field-row">
-              <label for="elementAnswer">Element (symbol or full name)</label>
-              <input id="elementAnswer" type="text" placeholder="e.g. Mg or Magnesium" autocomplete="off">
-              <button class="btn" id="checkElementBtn">
-                <span class="dot"></span>
-                VERIFY
-              </button>
-            </div>
+            <button class="btn" id="checkElementBtn">
+              <span class="dot"></span>
+              VERIFY ALL
+            </button>
 
             <div id="elementFeedback" class="feedback"></div>
           </section>
@@ -555,7 +732,7 @@
             <div class="screen-label">SCREEN 02 • BIOSPHERE SCAN</div>
             <h2>Detect Living Organisms on Planet X</h2>
             <p class="screen-desc">
-              The biosphere scanner has completed its sweep of the surface and atmosphere. 
+              The biosphere scanner has completed its sweep of the surface and atmosphere.
               Based on all sensor channels, decide whether Planet X currently hosts living organisms.
             </p>
 
@@ -589,13 +766,13 @@
             <div class="screen-label">SCREEN 03 • LANDING COORDINATES</div>
             <h2>Confirm Spaceship Landing Zone</h2>
             <p class="screen-desc">
-              Type the designated landing site. If the input contains 
-              <strong>สามเสน</strong> or <strong>Samsen</strong> (any case), the navigation system will accept it as correct.
+              Enter the designated landing site for this mission. Navigation will validate the name
+              against mission control records.
             </p>
 
             <div class="field-row">
               <label for="landingInput">Landing location name</label>
-              <input id="landingInput" type="text" placeholder="e.g. โรงเรียนสามเสนวิทยาลัย / Samsen ...">
+              <input id="landingInput" type="text" placeholder="Type landing zone name here">
             </div>
 
             <button class="btn" id="checkLandingBtn">
@@ -604,6 +781,28 @@
             </button>
 
             <div id="landingFeedback" class="feedback"></div>
+          </section>
+
+          <!-- Screen 4 – WIN PAGE -->
+          <section class="screen" data-screen="4">
+            <div class="screen-label">SCREEN 04 • LAUNCH CONFIRMATION</div>
+            <div class="win-main">
+              <div class="win-title">Destination Set – Ready to Take Off</div>
+              <p class="screen-desc">
+                All mission diagnostics are green. Elements correctly identified, biosphere scan confirmed,
+                and landing coordinates locked on target. Planet X approach vector is stable.
+              </p>
+              <div class="win-badge-row">
+                <div class="win-badge">CHEMICAL MODULE: OK</div>
+                <div class="win-badge">BIOSPHERE MODULE: OK</div>
+                <div class="win-badge">NAVIGATION MODULE: OK</div>
+                <div class="win-badge">CREW STATUS: CLEARED</div>
+              </div>
+              <p class="screen-desc">
+                🛸 <strong>Mission status:</strong> SUCCESS.  
+                The spaceship is ready to launch toward Planet X.
+              </p>
+            </div>
           </section>
         </div>
 
@@ -620,27 +819,25 @@
           </div>
 
           <div class="side-section">
+            <h3>SCORE</h3>
+            <p id="scoreSummary">
+              Q1 – Element ID: 0 / 1<br>
+              Q2 – Life Scan: 0 / 1
+            </p>
+          </div>
+
+          <div class="side-section">
             <h3>MISSION LOG</h3>
             <div class="log-lines" id="logLines">
               <div class="log-line">[BOOT] Spaceship monitor online…</div>
               <div class="log-line">[INFO] Awaiting crew input on Planet X parameters.</div>
             </div>
           </div>
-
-          <div class="side-section">
-            <h3>SAMPLE MAP</h3>
-            <p>
-              A = Mg (Magnesium) • B = Al (Aluminium)<br>
-              C = Fe (Iron) • D = Na (Sodium) • E = Cl (Chlorine)<br>
-              J = Br (Bromine) • G = I (Iodine) • Y = Li (Lithium)<br>
-              Z = K (Potassium) • L = Ag (Silver) • M = Cu (Copper)
-            </p>
-          </div>
         </aside>
       </div>
 
       <footer>
-        <span>CREW INTERFACE • v1.0 • TIME SYNC: PLANET X ORBIT</span>
+        <span>CREW INTERFACE • v1.2 • TIME SYNC: PLANET X ORBIT</span>
         <div class="footer-buttons">
           <button class="link-btn" id="prevScreenBtn">&lt; PREV</button>
           <button class="link-btn" id="nextScreenBtn">NEXT &gt;</button>
@@ -650,14 +847,52 @@
   </div>
 
   <script>
-    // ----- NAVIGATION -----
+    const totalScreens = 4;           // includes win screen
+    const progressTotal = 3;          // progress bar still 1/3 – 3/3
+
+    // ----- NAVIGATION & PROGRESS -----
     const screens = document.querySelectorAll('.screen');
     const navDots = document.querySelectorAll('.nav-dots button');
     const prevBtn = document.getElementById('prevScreenBtn');
     const nextBtn = document.getElementById('nextScreenBtn');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+
     let currentScreen = 1;
 
+    // score & completion
+    let q1Score = 0;
+    let q2Score = 0;
+    const pageComplete = { 1: false, 2: false, 3: false };
+
+    const scoreSummary = document.getElementById('scoreSummary');
+
+    function updateScoreboard() {
+      scoreSummary.innerHTML =
+        `Q1 – Element ID: ${q1Score} / 1<br>` +
+        `Q2 – Life Scan: ${q2Score} / 1`;
+    }
+
+    function updateProgressBar() {
+      const displayIndex = Math.min(currentScreen, progressTotal);
+      const fraction = displayIndex / progressTotal;
+      progressFill.style.width = (fraction * 100) + '%';
+      progressText.textContent = `${displayIndex} / ${progressTotal}`;
+    }
+
+    function canAccessScreen(num) {
+      if (num === 1) return true;
+      if (num === 2) return pageComplete[1];                      // need full score on page 1
+      if (num === 3) return pageComplete[1] && pageComplete[2];   // need full on 1 & 2
+      if (num === 4) return pageComplete[1] && pageComplete[2] && pageComplete[3]; // win
+      return false;
+    }
+
     function showScreen(num) {
+      if (!canAccessScreen(num)) {
+        addLog(`Access to screen 0${num} denied – complete previous diagnostics with full score.`, 'err');
+        return;
+      }
       currentScreen = num;
       screens.forEach(sec => {
         sec.classList.toggle('active', Number(sec.dataset.screen) === num);
@@ -665,6 +900,7 @@
       navDots.forEach(dot => {
         dot.classList.toggle('active', Number(dot.dataset.goto) === num);
       });
+      updateProgressBar();
     }
 
     navDots.forEach(dot => {
@@ -675,12 +911,12 @@
     });
 
     prevBtn.addEventListener('click', () => {
-      const target = currentScreen === 1 ? 3 : currentScreen - 1;
+      const target = currentScreen === 1 ? 1 : currentScreen - 1;
       showScreen(target);
     });
 
     nextBtn.addEventListener('click', () => {
-      const target = currentScreen === 3 ? 1 : currentScreen + 1;
+      const target = currentScreen === totalScreens ? totalScreens : currentScreen + 1;
       showScreen(target);
     });
 
@@ -695,17 +931,23 @@
       line.textContent = `[${ts}] ${message}`;
       logLinesEl.appendChild(line);
 
-      // keep last ~5 lines visible
       const lines = logLinesEl.querySelectorAll('.log-line');
       if (lines.length > 6) {
         logLinesEl.removeChild(lines[0]);
       }
     }
 
+    function checkMissionComplete() {
+      if (pageComplete[1] && pageComplete[2] && pageComplete[3]) {
+        addLog('All modules green. Mission complete – ready for launch.', 'ok');
+        showScreen(4);
+      }
+    }
+
     // ----- SCREEN 1: ELEMENT IDENTIFICATION -----
     const elementMap = {
       A: { symbol: 'MG', names: ['MAGNESIUM'] },
-      B: { symbol: 'AL', names: ['ALUMINIUM', 'ALUMINUM'] }, // accept both spellings
+      B: { symbol: 'AL', names: ['ALUMINIUM', 'ALUMINUM'] },
       C: { symbol: 'FE', names: ['IRON'] },
       D: { symbol: 'NA', names: ['SODIUM'] },
       E: { symbol: 'CL', names: ['CHLORINE'] },
@@ -717,48 +959,75 @@
       M: { symbol: 'CU', names: ['COPPER'] }
     };
 
-    const sampleSelect = document.getElementById('sampleSelect');
-    const elementAnswer = document.getElementById('elementAnswer');
+    const elementInputs = document.querySelectorAll('.element-input');
     const checkElementBtn = document.getElementById('checkElementBtn');
     const elementFeedback = document.getElementById('elementFeedback');
 
     function normalizeAnswer(str) {
-      return str.trim().toUpperCase();
+      return (str || '').trim().toUpperCase();
     }
 
     checkElementBtn.addEventListener('click', () => {
-      const code = sampleSelect.value;
-      const userRaw = elementAnswer.value;
-      const user = normalizeAnswer(userRaw);
+      const totalSamples = elementInputs.length;
+      let missing = 0;
+      let correctCount = 0;
 
-      if (!user) {
-        elementFeedback.textContent = 'Awaiting input: please provide a symbol or full element name.';
+      elementInputs.forEach(input => {
+        const value = input.value;
+        const normalized = normalizeAnswer(value);
+        if (!normalized) {
+          missing++;
+          return;
+        }
+
+        const code = input.dataset.code;
+        const data = elementMap[code];
+        if (!data) return;
+
+        const isSymbolMatch = normalized === data.symbol;
+        const isNameMatch = data.names.includes(normalized);
+
+        if (isSymbolMatch || isNameMatch) {
+          correctCount++;
+        }
+      });
+
+      if (missing > 0) {
+        elementFeedback.textContent =
+          `Please fill in all samples before verifying. (${missing} blank)`;
         elementFeedback.className = 'feedback error';
-        addLog('Element check failed – no input.', 'err');
+        addLog('Element check aborted – incomplete input set.', 'err');
+        q1Score = 0;
+        pageComplete[1] = false;
+        updateScoreboard();
         return;
       }
 
-      const data = elementMap[code];
-      const isSymbolMatch = user === data.symbol;
-      const isNameMatch = data.names.includes(user);
-
-      if (isSymbolMatch || isNameMatch) {
-        elementFeedback.innerHTML =
-          `✅ Correct. Sample <strong>${code}</strong> is <strong>${data.symbol}</strong> / <strong>${data.names[0]}</strong>.`;
+      if (correctCount === totalSamples) {
+        elementFeedback.textContent =
+          '✅ All element identifications are correct.';
         elementFeedback.className = 'feedback ok';
-        addLog(`Sample ${code} correctly identified as ${data.symbol}.`, 'ok');
+        addLog('All Planet X sample elements correctly identified.', 'ok');
+        q1Score = 1;
+        pageComplete[1] = true;
       } else {
-        elementFeedback.innerHTML =
-          `❌ Incorrect. Sample <strong>${code}</strong> corresponds to <strong>${data.symbol}</strong> / <strong>${data.names[0]}</strong>.`;
+        elementFeedback.textContent =
+          `❌ Some identifications are incorrect. Score: ${correctCount} / ${totalSamples}.`;
         elementFeedback.className = 'feedback error';
-        addLog(`Element identification mismatch for sample ${code}.`, 'err');
+        addLog('Element identification set not fully correct.', 'err');
+        q1Score = 0;
+        pageComplete[1] = false;
       }
+      updateScoreboard();
+      checkMissionComplete();
     });
 
-    elementAnswer.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        checkElementBtn.click();
-      }
+    elementInputs.forEach(input => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          checkElementBtn.click();
+        }
+      });
     });
 
     // ----- SCREEN 2: LIFE DETECTION -----
@@ -771,19 +1040,29 @@
         lifeFeedback.textContent = 'Select one option before confirming.';
         lifeFeedback.className = 'feedback error';
         addLog('Life scan: no selection made.', 'err');
+        q2Score = 0;
+        pageComplete[2] = false;
+        updateScoreboard();
         return;
       }
 
       const value = selected.value; // 'yes' or 'no'
+
       if (value === 'no') {
-        lifeFeedback.innerHTML = '✅ Correct. Sensors indicate <strong>no living organisms</strong> on Planet X.';
+        lifeFeedback.textContent = '✅ Correct.';
         lifeFeedback.className = 'feedback ok';
-        addLog('Life scan confirmed: NO detectable biosignatures.', 'ok');
+        addLog('Life scan answer correct.', 'ok');
+        q2Score = 1;
+        pageComplete[2] = true;
       } else {
-        lifeFeedback.innerHTML = '❌ Incorrect. Current mission data reports Planet X as <strong>sterile</strong>.';
+        lifeFeedback.textContent = '❌ Incorrect. Try again.';
         lifeFeedback.className = 'feedback error';
-        addLog('Life scan answer incorrect – planet is actually sterile.', 'err');
+        addLog('Life scan answer incorrect.', 'err');
+        q2Score = 0;
+        pageComplete[2] = false;
       }
+      updateScoreboard();
+      checkMissionComplete();
     });
 
     // ----- SCREEN 3: LANDING LOCATION -----
@@ -793,12 +1072,14 @@
 
     checkLandingBtn.addEventListener('click', () => {
       const raw = landingInput.value || '';
-      const normalized = raw.toLowerCase();
+      const normalized = raw.toLowerCase().trim();
 
-      if (!normalized.trim()) {
+      if (!normalized) {
         landingFeedback.textContent = 'Please type the landing site name.';
         landingFeedback.className = 'feedback error';
         addLog('Landing site validation failed – no input.', 'err');
+        pageComplete[3] = false;
+        checkMissionComplete();
         return;
       }
 
@@ -806,16 +1087,18 @@
       const hasEng = normalized.includes('samsen');
 
       if (hasThai || hasEng) {
-        landingFeedback.innerHTML =
-          '✅ Coordinates accepted. Landing site identified as containing <strong>สามเสน / Samsen</strong>.';
+        landingFeedback.textContent = '✅ Correct landing zone confirmed.';
         landingFeedback.className = 'feedback ok';
-        addLog('Landing zone confirmed: Samsen sector.', 'ok');
+        addLog('Landing zone validated.', 'ok');
+        pageComplete[3] = true;
       } else {
-        landingFeedback.innerHTML =
-          '❌ Landing site mismatch. Expected location containing <strong>สามเสน</strong> or <strong>Samsen</strong>.';
+        landingFeedback.textContent = '❌ Incorrect landing zone. Try again.';
         landingFeedback.className = 'feedback error';
         addLog('Landing site name invalid for this mission.', 'err');
+        pageComplete[3] = false;
       }
+
+      checkMissionComplete();
     });
 
     landingInput.addEventListener('keydown', (e) => {
@@ -823,6 +1106,10 @@
         checkLandingBtn.click();
       }
     });
+
+    // initial UI state
+    updateScoreboard();
+    updateProgressBar();
   </script>
 </body>
 </html>
